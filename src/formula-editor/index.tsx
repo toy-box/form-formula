@@ -1,10 +1,12 @@
-import React, { FC, useState, useCallback } from 'react'
+import React, { FC, useState, useCallback, useMemo } from 'react'
 import { UnControlled as CodeMirror } from 'react-codemirror2'
 import { Editor as CodemirrorEditor } from 'codemirror'
+import { ISchema } from '@formily/json-schema'
 import classNames from 'classnames'
 import { Toolbar } from './components'
 import { FunctionGroup, Variable } from './types'
 import { default as funs } from './functions'
+import { parseSchema } from './utils/parseSchema'
 
 import 'codemirror/mode/spreadsheet/spreadsheet.js'
 import './styles'
@@ -17,6 +19,7 @@ export interface FormulaEditorProps {
   onChange?: (value: string) => void
   className?: string
   style?: React.CSSProperties
+  schema?: ISchema
 }
 
 const cmOptions = {
@@ -26,9 +29,10 @@ const cmOptions = {
 }
 
 
-const FormulaEditor: FC<FormulaEditorProps> = ({ title, value = '', variables = [], functions = funs, onChange, style, className }) => {
+const FormulaEditor: FC<FormulaEditorProps> = ({ title, value = '', variables = [], functions = funs, onChange, style, className, schema }) => {
   const [editor, setEditor] = useState<CodemirrorEditor>()
   const prefixCls = 'formula-editor'
+  const innerVariables = useMemo(() => schema ? parseSchema(schema) : variables, [])
   const onReady = (editor: CodemirrorEditor, value: string) => {
     setEditor(editor)
     if (value != null && value !== '') {
@@ -48,7 +52,7 @@ const FormulaEditor: FC<FormulaEditorProps> = ({ title, value = '', variables = 
   }
 
   const initLineTag = (editor: any, content: any, line: any) => {
-    variables.forEach((variable) => {
+    innerVariables.forEach((variable) => {
       const variableMark = `{${variable.value}}`
       const regex = new RegExp(variableMark, 'g')
       while (regex.exec(content) !== null) {
@@ -90,7 +94,7 @@ const FormulaEditor: FC<FormulaEditorProps> = ({ title, value = '', variables = 
   return <div className={classNames(prefixCls, className)} style={style}>
     <Toolbar
       functions={functions}
-      variables={variables}
+      variables={innerVariables}
       insertFun={insertFun}
       insertVariable={insertVariable}
     />
@@ -101,9 +105,7 @@ const FormulaEditor: FC<FormulaEditorProps> = ({ title, value = '', variables = 
           value={value}
           options={cmOptions}
           editorDidMount={onReady}
-          onChange={(editor, data, value) => {
-            handleChange(editor, data, value)
-          }}
+          onChange={handleChange}
         />
       </div>
       <div className={`${prefixCls}-main__panel`}></div>
