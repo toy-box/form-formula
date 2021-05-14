@@ -49,18 +49,10 @@ const FormulaEditor: FC<FormulaEditorProps> = ({ title, value = '', variables = 
 
   const initLineTag = (editor: any, content: any, line: any) => {
     variables.forEach((variable) => {
-      const regex = new RegExp(
-        variable.value
-          .replace('(', '\\(')
-          .replace(')', '\\)')
-          .replace('{', '\\{)')
-          .replace('}', '\\})')
-          .replace('[', '\\[)')
-          .replace(']', '\\])'),
-        'g',
-      )
+      const variableMark = `{${variable.value}}`
+      const regex = new RegExp(variableMark, 'g')
       while (regex.exec(content) !== null) {
-        const begin = { line, ch: regex.lastIndex - variable.value.length }
+        const begin = { line, ch: regex.lastIndex - variableMark.length }
         const end = { line, ch: regex.lastIndex }
         replaceVariable(editor, begin, end, variable)
       }
@@ -77,15 +69,15 @@ const FormulaEditor: FC<FormulaEditorProps> = ({ title, value = '', variables = 
     editor.focus()
   }, [editor])
 
-  const insertVariable = (variable: any) =>{
+  const insertVariable = useCallback((variable: Variable) =>{
     if (editor == null) return
     const doc = editor.getDoc()
     const pos = doc.getCursor()
-    doc.replaceRange(variable.value, pos)
+    doc.replaceRange(`{${variable.value}}`, pos, pos)
     editor.focus()
-  }
+  }, [editor])
 
-  const replaceVariable = (editor: any, begin: any, end: any, val: any) => {
+  const replaceVariable = (editor: CodemirrorEditor, begin: any, end: any, val: Variable) => {
     const doc = editor.getDoc()
     const el = document.createElement('span')
     el.innerText = val.label

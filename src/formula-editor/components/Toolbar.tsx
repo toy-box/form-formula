@@ -13,7 +13,7 @@ export interface ToobarProps {
   functions?: FunctionGroup[]
   variables?: Variable[]
   insertFun?: (fn: string) => void
-  insertVariable?: (variable: string) => void
+  insertVariable?: (variable: Variable) => void
 }
 
 const Toolbar: FC<ToobarProps> = ({ functions, variables = [], insertFun, insertVariable }) => {
@@ -42,7 +42,7 @@ const Toolbar: FC<ToobarProps> = ({ functions, variables = [], insertFun, insert
               <FieldVariable
                 value={variable.value}
                 label={variable.label}
-                onClick={insertVariable}
+                onClick={() => insertVariable && insertVariable(variable)}
               />)
           }
         </TabPane>
