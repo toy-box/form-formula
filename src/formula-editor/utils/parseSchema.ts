@@ -8,13 +8,13 @@ export function parseSchema(schema: ISchema, path?: string) {
       const properties = schema.properties as SchemaProperties<any, any, any, any, any, any, any, any>
       Object.keys(properties).forEach(key => {
         const fieldSchema = properties[key]
-        fields.push(...parseSchema(fieldSchema, path))
+        fields.push(...parseSchema(fieldSchema, `${path ? `${path}.`: ''}${key}`))
       })
     }
   } else if (schema.type !== 'array') {
     fields.push({
       label: schema.title,
-      value: `${path ? `${path}.` : ''}${schema.name}`,
+      value: path,
       type: schema.type
     })
   }
