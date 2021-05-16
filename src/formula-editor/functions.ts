@@ -1,38 +1,49 @@
 const functions = [
   {
     name: '常用',
-    functions: [{
-      name: 'SUM',
-      description: '返回所有参与字段中数值的总和',
-    }, {
-      name: 'MAX',
-      description: '返回所有参与字段中数值的最大值',
-    }, {
-      name: 'MIN',
-      description: '返回所有参与字段中数值的最小值',
-    }, {
-      name: 'AVERAGE',
-      description: '计算所有参与运算字段的平均值',
-    }, {
-      name: 'COUNT',
-      description: '返回所有参与运算字段中值数字的数量',
-    },
-    {
-      name: 'COUNTA',
-      description: '返回所有参与运算字段中值不为空的数量',
-    }, {
-      name: 'ROUND',
-      description: '将数字四舍五入到指定的位数',
-    }, {
-      name: 'IF',
-      description: '根据判断条件，返回正确或错误的值',
-    }, {
-      name: 'AND',
-      description: '返回逻辑值：如果所有参数值均为逻辑“true”，则返回逻辑“true”，反之返回逻辑“false',
-    }, {
-      name: 'NOT',
-      description: '对参数逻辑值求反',
-    }],
+    functions: [
+      {
+        name: 'SUM',
+        description: '返回所有参与字段中数值的总和',
+      },
+      {
+        name: 'MAX',
+        description: '返回所有参与字段中数值的最大值',
+      },
+      {
+        name: 'MIN',
+        description: '返回所有参与字段中数值的最小值',
+      },
+      {
+        name: 'AVERAGE',
+        description: '计算所有参与运算字段的平均值',
+      },
+      {
+        name: 'COUNT',
+        description: '返回所有参与运算字段中值数字的数量',
+      },
+      {
+        name: 'COUNTA',
+        description: '返回所有参与运算字段中值不为空的数量',
+      },
+      {
+        name: 'ROUND',
+        description: '将数字四舍五入到指定的位数',
+      },
+      {
+        name: 'IF',
+        description: '根据判断条件，返回正确或错误的值',
+      },
+      {
+        name: 'AND',
+        description:
+          '返回逻辑值：如果所有参数值均为逻辑“true”，则返回逻辑“true”，反之返回逻辑“false',
+      },
+      {
+        name: 'NOT',
+        description: '对参数逻辑值求反',
+      },
+    ],
   },
   {
     name: '逻辑',
@@ -47,11 +58,13 @@ const functions = [
       // },
       {
         name: 'AND',
-        description: '返回逻辑值：如果所有参数值均为逻辑“true”，则返回逻辑“true”，反之返回逻辑“false',
+        description:
+          '返回逻辑值：如果所有参数值均为逻辑“true”，则返回逻辑“true”，反之返回逻辑“false',
       },
       {
         name: 'OR',
-        description: '任何一个参数逻辑值为true，即返回true；只有当所有逻辑参数值为false，才返回false',
+        description:
+          '任何一个参数逻辑值为true，即返回true；只有当所有逻辑参数值为false，才返回false',
       },
       {
         name: 'XOR',
@@ -60,10 +73,6 @@ const functions = [
       {
         name: 'NOT',
         description: '对参数逻辑值求反',
-      },
-      {
-        name: 'ISEMPTY',
-        description: '判断字段值是否为空',
       },
     ],
   },
@@ -84,7 +93,8 @@ const functions = [
       },
       {
         name: 'COUNTIF',
-        description: 'COUNTIF(表格[金额], 100)，可得到表格中金额为100的数据条数',
+        description:
+          'COUNTIF(表格[金额], 100)，可得到表格中金额为100的数据条数',
       },
       {
         name: 'MAX',
@@ -177,7 +187,8 @@ const functions = [
       },
       {
         name: 'DATE',
-        description: '将数字拼接成为年份，数字字段顺序为：年／月／日／时／分／秒',
+        description:
+          '将数字拼接成为年份，数字字段顺序为：年／月／日／时／分／秒',
       },
       {
         name: 'CURDATE',
