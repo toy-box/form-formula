@@ -10,7 +10,8 @@
     "release": "npm run build && npm publish --access public",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
     "test": "umi-test",
-    "test:coverage": "umi-test --coverage"
+    "test:coverage": "umi-test --coverage",
+    "antlr4ts": "antlr4ts ./src/formula/FormulaLexer.g4 ./src/formula/FormulaParser.g4"
   },
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "@formily/json-schema": "^2.0.0-beta.48",
+    "@formily/react": "^2.0.0-beta.49",
     "@formulajs/formulajs": "^2.6.9",
     "antd": "^4.15.5",
     "antlr4ts": "^0.5.0-alpha.4",

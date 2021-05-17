@@ -1,3 +1,4 @@
+import formulajs, { FormulaType } from '@formulajs/formulajs';
 import {
   AdditiveExpressionContext,
   ArgumentContext,
@@ -5,21 +6,31 @@ import {
   ArgumentsContext,
   BooleanLiteralExpressionContext,
   DecimalLiteralExpressionContext,
-  ExpressionSequenceContext,
-  ExpressionStatementContext,
   FunctionContext,
   FunctionExpressionContext,
   MultiplicativeExpressionContext,
-  ParenthesizedExpressionContext,
   SingleExpressionContext,
   StatContext,
   StringLiteralExpressionContext,
   VariableExpressionContext,
 } from './FormulaParser';
-import { FormulaParserListener } from './FormulaParserListener';
+import { FormulaParserListener, ParseResult } from './FormulaParserListener';
+import { ParserException } from './ParserException';
+
+declare type FieldValueGet = (pattern: string) => any;
 
 export class FormulaParserListenerImpl implements FormulaParserListener {
+  private parseResult: ParseResult = {
+    success: false,
+    result: undefined,
+  };
+  private parseException?: ParserException;
   private parserMap = new WeakMap();
+  private getFieldValue: FieldValueGet;
+
+  constructor(getFieldValue: FieldValueGet) {
+    this.getFieldValue = getFieldValue;
+  }
 
   exitBooleanLiteralExpression(ctx: BooleanLiteralExpressionContext) {
     this.parserMap.set(
@@ -37,16 +48,24 @@ export class FormulaParserListenerImpl implements FormulaParserListener {
   }
 
   exitVariableExpression(ctx: VariableExpressionContext) {
-    this.parserMap.set(ctx, 1000);
+    this.parserMap.set(
+      ctx,
+      this.getFieldValue(ctx.variable().FieldLiteral().text),
+    );
   }
 
   exitFunction(ctx: FunctionContext) {
     const args = this.parserMap.get(ctx.getChild(1)) as number[];
-    console.log('func', ctx.childCount, args);
-    if (ctx.getChild(0).text.toUpperCase() === 'SUM') {
-      const result = args.reduce((prev, current) => prev + current, 0);
-      console.log('SUM =', args, result);
-      this.parserMap.set(ctx, result);
+    const fn = formulajs[ctx.getChild(0).text.toUpperCase() as FormulaType] as (
+      ...args: any[]
+    ) => any;
+    if (fn == null) {
+      this.parseResult = {
+        success: false,
+        result: new ParserException('function not exists'),
+      };
+    } else {
+      this.parserMap.set(ctx, fn(...args));
     }
   }
 
@@ -86,23 +105,25 @@ export class FormulaParserListenerImpl implements FormulaParserListener {
     this.parserMap.set(ctx, op === '*' ? left * right : left / right);
   }
 
-  exitParenthesizedExpression(ctx: ParenthesizedExpressionContext) {
-    this.parserMap.set(ctx, this.parserMap.get(ctx.getChild(1)));
-  }
-
   exitStat(ctx: StatContext) {
-    console.log('StatContext', this.parserMap.get(ctx.getChild(0)));
-  }
-
-  exitExpressionStatement(ctx: ExpressionStatementContext) {
-    this.parserMap.set(ctx, this.parserMap.get(ctx.getChild(0)));
-  }
-
-  exitExpressionSequence(ctx: ExpressionSequenceContext) {
-    this.parserMap.set(ctx, this.parserMap.get(ctx.getChild(0)));
+    if (this.parseException) {
+      this.parseResult = {
+        success: false,
+        result: this.parseException,
+      };
+    } else {
+      this.parseResult = {
+        success: true,
+        result: this.parserMap.get(ctx.getChild(0)),
+      };
+    }
   }
 
   exitSingleExpression(ctx: SingleExpressionContext) {
     this.parserMap.set(ctx, this.parserMap.get(ctx.getChild(0)));
+  }
+
+  getResult() {
+    return this.parseResult;
   }
 }

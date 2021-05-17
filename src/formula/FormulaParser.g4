@@ -4,13 +4,7 @@ options {
 	tokenVocab = FormulaLexer;
 }
 
-stat: expressionStatement;
-
-expressionStatement:
-	expressionSequence;
-
-
-expressionSequence: singleExpression (',' singleExpression)*;
+stat: singleExpression;
 
 arguments: '(' (argumentList ','?)? ')';
 
@@ -25,12 +19,11 @@ function:
 	FunctionLiteral arguments;
 
 singleExpression:
-	DecimalLiteral																# DecimalLiteralExpression
+	DecimalLiteral																	# DecimalLiteralExpression
 	| StringLiteral																	# StringLiteralExpression
 	| BooleanLiteral																# BooleanLiteralExpression
 	| variable																			# VariableExpression
-	| singleExpression ('*' | '/') singleExpression				# MultiplicativeExpression
-	| singleExpression ('+' | '-') singleExpression				# AdditiveExpression
-	| '(' expressionSequence ')'										# ParenthesizedExpression
+	| singleExpression ('*' | '/') singleExpression	# MultiplicativeExpression
+	| singleExpression ('+' | '-') singleExpression	# AdditiveExpression
 	| function																			# FunctionExpression
 ;

@@ -1,4 +1,28 @@
 declare module '@formulajs/formulajs' {
+  export type FormulaType =
+    | 'IF'
+    | 'AND'
+    | 'OR'
+    | 'XOR'
+    | 'NOT'
+    | 'AVERAGE'
+    | 'COUNT'
+    | 'COUNTA'
+    | 'COUNTIF'
+    | 'MAX'
+    | 'MIN'
+    | 'ROUND'
+    | 'INT'
+    | 'MOD'
+    | 'PRODUCT'
+    | 'SUMPRODUCT'
+    | 'SUM'
+    | 'SUMIF'
+    | 'ROUNDUP'
+    | 'ROUNDDOWN'
+    | 'POWER'
+    | 'LN'
+    | 'SQRT';
   interface Formulajs {
     IF: <L, R>(criteria: boolean, left: L, right: R) => L | R;
     AND: (...args: boolean[]) => boolean;

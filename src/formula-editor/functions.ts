@@ -132,10 +132,6 @@ const functions = [
         name: 'SUMIF',
         description: '统计表格中符合条件的数值，并求和',
       },
-      // {
-      //   name: 'NUMBERVALUE',
-      //   description: '返回文本中的数字',
-      // },
       {
         name: 'ROUNDUP',
         description: '将数字保留指定的位数，最后一位向上取',

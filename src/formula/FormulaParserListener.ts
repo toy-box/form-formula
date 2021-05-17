@@ -1,4 +1,4 @@
-// Generated from FormulaParser.g4 by ANTLR 4.9.0-SNAPSHOT
+// Generated from ./src/formula/FormulaParser.g4 by ANTLR 4.9.0-SNAPSHOT
 
 import { ParseTreeListener } from 'antlr4ts/tree/ParseTreeListener';
 
@@ -8,11 +8,8 @@ import { BooleanLiteralExpressionContext } from './FormulaParser';
 import { VariableExpressionContext } from './FormulaParser';
 import { MultiplicativeExpressionContext } from './FormulaParser';
 import { AdditiveExpressionContext } from './FormulaParser';
-import { ParenthesizedExpressionContext } from './FormulaParser';
 import { FunctionExpressionContext } from './FormulaParser';
 import { StatContext } from './FormulaParser';
-import { ExpressionStatementContext } from './FormulaParser';
-import { ExpressionSequenceContext } from './FormulaParser';
 import { ArgumentsContext } from './FormulaParser';
 import { ArgumentListContext } from './FormulaParser';
 import { ArgumentContext } from './FormulaParser';
@@ -20,11 +17,17 @@ import { VariableContext } from './FormulaParser';
 import { FunctionContext } from './FormulaParser';
 import { SingleExpressionContext } from './FormulaParser';
 
+export interface ParseResult {
+  success: boolean;
+  result: any;
+}
+
 /**
  * This interface defines a complete listener for a parse tree produced by
  * `FormulaParser`.
  */
 export interface FormulaParserListener extends ParseTreeListener {
+  getResult: () => ParseResult;
   /**
    * Enter a parse tree produced by the `DecimalLiteralExpression`
    * labeled alternative in `FormulaParser.singleExpression`.
@@ -110,19 +113,6 @@ export interface FormulaParserListener extends ParseTreeListener {
   exitAdditiveExpression?: (ctx: AdditiveExpressionContext) => void;
 
   /**
-   * Enter a parse tree produced by the `ParenthesizedExpression`
-   * labeled alternative in `FormulaParser.singleExpression`.
-   * @param ctx the parse tree
-   */
-  enterParenthesizedExpression?: (ctx: ParenthesizedExpressionContext) => void;
-  /**
-   * Exit a parse tree produced by the `ParenthesizedExpression`
-   * labeled alternative in `FormulaParser.singleExpression`.
-   * @param ctx the parse tree
-   */
-  exitParenthesizedExpression?: (ctx: ParenthesizedExpressionContext) => void;
-
-  /**
    * Enter a parse tree produced by the `FunctionExpression`
    * labeled alternative in `FormulaParser.singleExpression`.
    * @param ctx the parse tree
@@ -145,28 +135,6 @@ export interface FormulaParserListener extends ParseTreeListener {
    * @param ctx the parse tree
    */
   exitStat?: (ctx: StatContext) => void;
-
-  /**
-   * Enter a parse tree produced by `FormulaParser.expressionStatement`.
-   * @param ctx the parse tree
-   */
-  enterExpressionStatement?: (ctx: ExpressionStatementContext) => void;
-  /**
-   * Exit a parse tree produced by `FormulaParser.expressionStatement`.
-   * @param ctx the parse tree
-   */
-  exitExpressionStatement?: (ctx: ExpressionStatementContext) => void;
-
-  /**
-   * Enter a parse tree produced by `FormulaParser.expressionSequence`.
-   * @param ctx the parse tree
-   */
-  enterExpressionSequence?: (ctx: ExpressionSequenceContext) => void;
-  /**
-   * Exit a parse tree produced by `FormulaParser.expressionSequence`.
-   * @param ctx the parse tree
-   */
-  exitExpressionSequence?: (ctx: ExpressionSequenceContext) => void;
 
   /**
    * Enter a parse tree produced by `FormulaParser.arguments`.
