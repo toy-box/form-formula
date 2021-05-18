@@ -10,8 +10,40 @@ import {
   FormulaParserListenerImpl,
   ParseTreeWalker,
 } from './formula';
+import { ISchema } from '@formily/json-schema';
+import { SchemaProperties } from '@formily/react';
 
-export function reactionsPatch(reactions: any | any[]) {
+export function schemaPatch(schema: ISchema) {
+  const { ['x-reactions']: reactions, properties } = schema;
+
+  return {
+    ...schema,
+    properties:
+      typeof properties === 'object' ? propertiesPatch(properties) : properties,
+    'x-reactions': reactions ? reactionsPatch(reactions) : undefined,
+  };
+}
+
+function propertiesPatch(
+  properties: SchemaProperties<any, any, any, any, any, any, any, any>,
+) {
+  const propertiesPatched: SchemaProperties<
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any,
+    any
+  > = {};
+  Object.keys(properties).forEach((key) => {
+    propertiesPatched[key] = schemaPatch(properties[key]);
+  });
+  return propertiesPatched;
+}
+
+function reactionsPatch(reactions: any | any[]) {
   if (isArr(reactions)) {
     return reactions.map((reaction) => reactionPath(reaction));
   }
