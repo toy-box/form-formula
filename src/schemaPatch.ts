@@ -18,14 +18,14 @@ export function reactionsPatch(reactions: any | any[]) {
   return reactionPath(reactions);
 }
 
-export function reactionPath(reaction: any) {
+function reactionPath(reaction: any) {
   if (reaction.type === 'formula') {
     return makeFormulaRunner(reaction.formula);
   }
   return reaction;
 }
 
-export function makeFormulaRunner(formula: string) {
+function makeFormulaRunner(formula: string) {
   return (field: Field) => {
     const chars = CharStreams.fromString(formula);
     const lexer = new FormulaLexer(chars);
@@ -57,22 +57,22 @@ export function makeFormulaRunner(formula: string) {
   };
 }
 
-export function getParentPath(path: string) {
+function getParentPath(path: string) {
   const pathArr = path.split('.');
   pathArr.splice(pathArr.length - 1, 1);
   return pathArr.join('.');
 }
 
-export function isBrother(field: Field, path: string) {
+function isBrother(field: Field, path: string) {
   return field.parent.path.toString() === getParentPath(path);
 }
 
-export function getIndex(field: Field) {
+function getIndex(field: Field) {
   const pathArr = field.path.toArr();
   return pathArr[pathArr.length - 2];
 }
 
-export function getFieldKey(field: Field | string) {
+function getFieldKey(field: Field | string) {
   if (typeof field == 'string') {
     const pathArr = field.split('.');
     return pathArr[pathArr.length - 1];
