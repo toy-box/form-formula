@@ -1,16 +1,7 @@
 import { Field } from '@formily/core/esm/models/Field';
 import { isArrayField } from '@formily/core';
 import { isArr } from '@formily/shared';
-import {
-  CharStreams,
-  CommonTokenStream,
-  FormulaLexer,
-  formulaParse,
-  FormulaParser,
-  FormulaParserListener,
-  FormulaParserListenerImpl,
-  ParseTreeWalker,
-} from '@toy-box/formula';
+import { formulaParse } from '@toy-box/formula';
 import { ISchema } from '@formily/json-schema';
 import { SchemaProperties } from '@formily/react';
 
