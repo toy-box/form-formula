@@ -1,6 +1,6 @@
 {
   "name": "@toy-box/form-formula",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
@@ -32,13 +32,13 @@
     "@formily/json-schema": "^2.0.0-beta.50",
     "@formily/react": "^2.0.0-beta.50",
     "@formulajs/formulajs": "^2.6.9",
+    "@toy-box/formula": "^1.0.0",
     "antd": "^4.15.5",
-    "antlr4ts": "^0.5.0-alpha.4",
     "classnames": "^2.3.1",
     "codemirror": "^5.61.0",
     "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "react-codemirror2": "^7.2.1"
+    "react-codemirror2": "^7.2.1",
+    "react-dom": "^16.12.0"
   },
   "peerDependencies": {
     "@formily/core": "^2.0.0-beta.50",
@@ -52,7 +52,6 @@
   "devDependencies": {
     "@types/codemirror": "^5.60.0",
     "@umijs/test": "^3.0.5",
-    "antlr4ts-cli": "^0.5.0-alpha.4",
     "dumi": "^1.0.14",
     "father-build": "^1.17.2",
     "gh-pages": "^3.0.0",

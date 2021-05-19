@@ -5,11 +5,12 @@ import {
   CharStreams,
   CommonTokenStream,
   FormulaLexer,
+  formulaParse,
   FormulaParser,
   FormulaParserListener,
   FormulaParserListenerImpl,
   ParseTreeWalker,
-} from './formula';
+} from '@toy-box/formula';
 import { ISchema } from '@formily/json-schema';
 import { SchemaProperties } from '@formily/react';
 
@@ -59,33 +60,50 @@ function reactionPath(reaction: any) {
 
 function makeFormulaRunner(formula: string) {
   return (field: Field) => {
-    const chars = CharStreams.fromString(formula);
-    const lexer = new FormulaLexer(chars);
-    const tokens = new CommonTokenStream(lexer);
-    const parser = new FormulaParser(tokens);
-    parser.buildParseTree = true;
-    const tree = parser.stat();
-    const listener: FormulaParserListener = new FormulaParserListenerImpl(
-      (pattern: string) => {
-        const { form } = field;
-        const path = pattern.substr(1, pattern.length - 2);
-        if (isArrayField(field.parent) && isBrother(field, path)) {
-          return form.getValuesIn(
-            `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(path)}}]`,
-          );
-        }
-        const query = form.query(path);
-        const parentField = query.take().parent;
-        if (isArrayField(parentField)) {
-          return form
-            .getValuesIn(parentField.path)
-            .map((item: Record<string, any>) => item[getFieldKey(path)]);
-        }
-        return form.getValuesIn(path.substr(1, path.length - 2));
-      },
-    );
-    ParseTreeWalker.DEFAULT.walk(listener, tree);
-    return listener.getResult();
+    return formulaParse(formula, (pattern: string) => {
+      const { form } = field;
+      const path = pattern.substr(1, pattern.length - 2);
+      if (isArrayField(field.parent) && isBrother(field, path)) {
+        return form.getValuesIn(
+          `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(path)}}]`,
+        );
+      }
+      const query = form.query(path);
+      const parentField = query.take().parent;
+      if (isArrayField(parentField)) {
+        return form
+          .getValuesIn(parentField.path)
+          .map((item: Record<string, any>) => item[getFieldKey(path)]);
+      }
+      return form.getValuesIn(path.substr(1, path.length - 2));
+    });
+    // const chars = CharStreams.fromString(formula)
+    // const lexer = new FormulaLexer(chars)
+    // const tokens = new CommonTokenStream(lexer)
+    // const parser = new FormulaParser(tokens)
+    // parser.buildParseTree = true
+    // const tree = parser.stat()
+    // const listener: FormulaParserListener = new FormulaParserListenerImpl(
+    //   (pattern: string) => {
+    //     const { form } = field
+    //     const path = pattern.substr(1, pattern.length - 2)
+    //     if (isArrayField(field.parent) && isBrother(field, path)) {
+    //       return form.getValuesIn(
+    //         `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(path)}}]`,
+    //       )
+    //     }
+    //     const query = form.query(path)
+    //     const parentField = query.take().parent
+    //     if (isArrayField(parentField)) {
+    //       return form
+    //         .getValuesIn(parentField.path)
+    //         .map((item: Record<string, any>) => item[getFieldKey(path)])
+    //     }
+    //     return form.getValuesIn(path.substr(1, path.length - 2))
+    //   },
+    // )
+    // ParseTreeWalker.DEFAULT.walk(listener, tree)
+    // return listener.getResult()
   };
 }
 
