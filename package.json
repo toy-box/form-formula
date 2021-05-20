@@ -1,6 +1,6 @@
 {
   "name": "@toy-box/form-formula",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",

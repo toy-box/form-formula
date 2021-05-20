@@ -67,7 +67,7 @@ function reactionPatch(reaction: any) {
           if (isArrayField(field.parent) && isBrother(field, path)) {
             return brotherValue;
           }
-          if (takenField && isArrayField(takenField.parent)) {
+          if (takenField && isArrayField(takenField)) {
             return arrayValue.map(
               (item: Record<string, any>) => item[getFieldKey(path)],
             );
