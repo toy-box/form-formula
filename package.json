@@ -32,7 +32,7 @@
     "@formily/json-schema": "^2.0.0-beta.50",
     "@formily/react": "^2.0.0-beta.50",
     "@formulajs/formulajs": "^2.6.9",
-    "@toy-box/formula": "^1.0.3",
+    "@toy-box/formula": "^1.0.4",
     "antd": "^4.15.5",
     "classnames": "^2.3.1",
     "codemirror": "^5.61.0",
