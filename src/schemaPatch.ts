@@ -45,12 +45,12 @@ function propertiesPatch(
 
 function reactionsPatch(reactions: any | any[]) {
   if (isArr(reactions)) {
-    return reactions.map((reaction) => reactionPath(reaction));
+    return reactions.map((reaction) => reactionPatch(reaction));
   }
-  return reactionPath(reactions);
+  return reactionPatch(reactions);
 }
 
-function reactionPath(reaction: any) {
+function reactionPatch(reaction: any) {
   if (reaction.type === 'formula') {
     return makeFormulaRunner(reaction.formula);
   }
@@ -59,7 +59,7 @@ function reactionPath(reaction: any) {
 
 function makeFormulaRunner(formula: string) {
   return (field: Field) => {
-    return formulaParse(formula, (pattern: string) => {
+    const result = formulaParse(formula, (pattern: string) => {
       const { form } = field;
       const path = pattern.substr(1, pattern.length - 2);
       if (isArrayField(field.parent) && isBrother(field, path)) {
@@ -76,6 +76,10 @@ function makeFormulaRunner(formula: string) {
       }
       return form.getValuesIn(path.substr(1, path.length - 2));
     });
+
+    if (result.success) {
+      field.form.setValuesIn(field.path, result.result);
+    }
   };
 }
 
