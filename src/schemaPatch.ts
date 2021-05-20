@@ -55,7 +55,7 @@ function reactionPatch(reaction: any) {
     return (field: Field) => {
       const result = formulaParse(reaction.formula, (pattern: string) => {
         const { form } = field;
-        const path = pattern.substr(1, pattern.length - 2);
+        const path = pattern.substr(2, pattern.length - 3);
         if (isArrayField(field.parent) && isBrother(field, path)) {
           return form.getValuesIn(
             `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(path)}}]`,
@@ -68,7 +68,7 @@ function reactionPatch(reaction: any) {
             .getValuesIn(parentField.path)
             .map((item: Record<string, any>) => item[getFieldKey(path)]);
         }
-        return form.getValuesIn(path.substr(1, path.length - 2));
+        return form.getValuesIn(path);
       });
 
       if (result.success) {
@@ -78,32 +78,6 @@ function reactionPatch(reaction: any) {
   }
   return reaction;
 }
-
-// function makeFormulaRunner(formula: string) {
-//   return (field: Field) => {
-//     const result = formulaParse(formula, (pattern: string) => {
-//       const { form } = field;
-//       const path = pattern.substr(1, pattern.length - 2);
-//       if (isArrayField(field.parent) && isBrother(field, path)) {
-//         return form.getValuesIn(
-//           `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(path)}}]`,
-//         );
-//       }
-//       const query = form.query(path);
-//       const parentField = query.take().parent;
-//       if (isArrayField(parentField)) {
-//         return form
-//           .getValuesIn(parentField.path)
-//           .map((item: Record<string, any>) => item[getFieldKey(path)]);
-//       }
-//       return form.getValuesIn(path.substr(1, path.length - 2));
-//     });
-
-//     if (result.success) {
-//       field.form.setValuesIn(field.path, result.result);
-//     }
-//   };
-// }
 
 function getParentPath(path: string) {
   const pathArr = path.split('.');
