@@ -10,7 +10,10 @@ export function schemaPatch(schema: ISchema) {
   let newSchema = { ...schema };
   if (properties) {
     newSchema = Object.assign(schema, {
-      properties: propertiesPatch(properties),
+      properties:
+        typeof properties === 'object'
+          ? propertiesPatch(properties)
+          : properties,
     });
   }
   if (reactions) {
