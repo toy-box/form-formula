@@ -53,26 +53,29 @@ function reactionsPatch(reactions: any | any[]) {
 function reactionPatch(reaction: any) {
   if (reaction.type === 'formula') {
     return (field: Field) => {
-      const result = formulaParse(reaction.formula, (pattern: string) => {
-        const { form } = field;
-        const path = pattern.substr(2, pattern.length - 3);
-        if (isArrayField(field.parent) && isBrother(field, path)) {
-          return form.getValuesIn(
-            `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(path)}}]`,
-          );
-        }
-        const query = form.query(path);
-        const parentField = query.take().parent;
-        if (isArrayField(parentField)) {
-          return form
-            .getValuesIn(parentField.path)
-            .map((item: Record<string, any>) => item[getFieldKey(path)]);
-        }
-        return form.getValuesIn(path);
-      });
+      if (field.form.initialized) {
+        const result = formulaParse(reaction.formula, (pattern: string) => {
+          const path = pattern.substr(2, pattern.length - 3);
+          if (isArrayField(field.parent) && isBrother(field, path)) {
+            return field.form.getValuesIn(
+              `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(
+                path,
+              )}}]`,
+            );
+          }
+          const query = field.form.query(path);
+          const parentField = query.take().parent;
+          if (isArrayField(parentField)) {
+            return field.form
+              .getValuesIn(parentField.path)
+              .map((item: Record<string, any>) => item[getFieldKey(path)]);
+          }
+          return field.form.getValuesIn(path);
+        });
 
-      if (result.success) {
-        field.form.setValuesIn(field.path, result.result);
+        if (result.success) {
+          field.form.setValuesIn(field.path, result.result);
+        }
       }
     };
   }
