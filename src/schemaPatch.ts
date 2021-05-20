@@ -56,21 +56,21 @@ function reactionPatch(reaction: any) {
       if (field.form.initialized) {
         const result = formulaParse(reaction.formula, (pattern: string) => {
           const path = pattern.substr(2, pattern.length - 3);
-          if (isArrayField(field.parent) && isBrother(field, path)) {
-            return field.form.getValuesIn(
-              `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(
-                path,
-              )}}]`,
-            );
-          }
           const query = field.form.query(path);
           const takenField = query.take();
-          if (takenField && isArrayField(takenField.parent)) {
-            return field.form
-              .getValuesIn(takenField.parent.path)
-              .map((item: Record<string, any>) => item[getFieldKey(path)]);
+          const fieldValue = field.form.getValuesIn(path);
+          const brotherAddress = `${getParentPath(path)}.${getIndex(
+            field,
+          )}.${getFieldKey(path)}`;
+          const brotherValue = field.form.getValuesIn(brotherAddress);
+          const arrayValue = field.form.getValuesIn(takenField?.parent?.path);
+          if (isArrayField(field.parent) && isBrother(field, path)) {
+            return brotherValue;
           }
-          return takenField ? field.form.getValuesIn(path) : null;
+          if (takenField && isArrayField(takenField.parent)) {
+            return arrayValue;
+          }
+          return fieldValue;
         });
 
         if (result.success) {
