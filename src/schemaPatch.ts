@@ -7,13 +7,18 @@ import { SchemaProperties } from '@formily/react';
 
 export function schemaPatch(schema: ISchema) {
   const { ['x-reactions']: reactions, properties } = schema;
-
-  return {
-    ...schema,
-    properties:
-      typeof properties === 'object' ? propertiesPatch(properties) : properties,
-    'x-reactions': reactions ? reactionsPatch(reactions) : undefined,
-  };
+  let newSchema = { ...schema };
+  if (properties) {
+    newSchema = Object.assign(schema, {
+      properties: propertiesPatch(properties),
+    });
+  }
+  if (reactions) {
+    newSchema = Object.assign(schema, {
+      'x-reactions': reactionsPatch(reactions),
+    });
+  }
+  return newSchema;
 }
 
 function propertiesPatch(
@@ -68,33 +73,6 @@ function makeFormulaRunner(formula: string) {
       }
       return form.getValuesIn(path.substr(1, path.length - 2));
     });
-    // const chars = CharStreams.fromString(formula)
-    // const lexer = new FormulaLexer(chars)
-    // const tokens = new CommonTokenStream(lexer)
-    // const parser = new FormulaParser(tokens)
-    // parser.buildParseTree = true
-    // const tree = parser.stat()
-    // const listener: FormulaParserListener = new FormulaParserListenerImpl(
-    //   (pattern: string) => {
-    //     const { form } = field
-    //     const path = pattern.substr(1, pattern.length - 2)
-    //     if (isArrayField(field.parent) && isBrother(field, path)) {
-    //       return form.getValuesIn(
-    //         `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(path)}}]`,
-    //       )
-    //     }
-    //     const query = form.query(path)
-    //     const parentField = query.take().parent
-    //     if (isArrayField(parentField)) {
-    //       return form
-    //         .getValuesIn(parentField.path)
-    //         .map((item: Record<string, any>) => item[getFieldKey(path)])
-    //     }
-    //     return form.getValuesIn(path.substr(1, path.length - 2))
-    //   },
-    // )
-    // ParseTreeWalker.DEFAULT.walk(listener, tree)
-    // return listener.getResult()
   };
 }
 
