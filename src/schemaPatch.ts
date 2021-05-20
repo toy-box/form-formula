@@ -64,13 +64,13 @@ function reactionPatch(reaction: any) {
             );
           }
           const query = field.form.query(path);
-          const parentField = query.take().parent;
-          if (isArrayField(parentField)) {
+          const takenField = query.take();
+          if (takenField && isArrayField(takenField.parent)) {
             return field.form
-              .getValuesIn(parentField.path)
+              .getValuesIn(takenField.parent.path)
               .map((item: Record<string, any>) => item[getFieldKey(path)]);
           }
-          return field.form.getValuesIn(path);
+          return takenField ? field.form.getValuesIn(path) : null;
         });
 
         if (result.success) {
