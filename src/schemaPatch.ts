@@ -52,36 +52,58 @@ function reactionsPatch(reactions: any | any[]) {
 
 function reactionPatch(reaction: any) {
   if (reaction.type === 'formula') {
-    return makeFormulaRunner(reaction.formula);
+    return (field: Field) => {
+      const result = formulaParse(reaction.formula, (pattern: string) => {
+        const { form } = field;
+        const path = pattern.substr(1, pattern.length - 2);
+        if (isArrayField(field.parent) && isBrother(field, path)) {
+          return form.getValuesIn(
+            `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(path)}}]`,
+          );
+        }
+        const query = form.query(path);
+        const parentField = query.take().parent;
+        if (isArrayField(parentField)) {
+          return form
+            .getValuesIn(parentField.path)
+            .map((item: Record<string, any>) => item[getFieldKey(path)]);
+        }
+        return form.getValuesIn(path.substr(1, path.length - 2));
+      });
+
+      if (result.success) {
+        field.form.setValuesIn(field.path, result.result);
+      }
+    };
   }
   return reaction;
 }
 
-function makeFormulaRunner(formula: string) {
-  return (field: Field) => {
-    const result = formulaParse(formula, (pattern: string) => {
-      const { form } = field;
-      const path = pattern.substr(1, pattern.length - 2);
-      if (isArrayField(field.parent) && isBrother(field, path)) {
-        return form.getValuesIn(
-          `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(path)}}]`,
-        );
-      }
-      const query = form.query(path);
-      const parentField = query.take().parent;
-      if (isArrayField(parentField)) {
-        return form
-          .getValuesIn(parentField.path)
-          .map((item: Record<string, any>) => item[getFieldKey(path)]);
-      }
-      return form.getValuesIn(path.substr(1, path.length - 2));
-    });
+// function makeFormulaRunner(formula: string) {
+//   return (field: Field) => {
+//     const result = formulaParse(formula, (pattern: string) => {
+//       const { form } = field;
+//       const path = pattern.substr(1, pattern.length - 2);
+//       if (isArrayField(field.parent) && isBrother(field, path)) {
+//         return form.getValuesIn(
+//           `${getParentPath(path)}.${getIndex(field)}.${getFieldKey(path)}}]`,
+//         );
+//       }
+//       const query = form.query(path);
+//       const parentField = query.take().parent;
+//       if (isArrayField(parentField)) {
+//         return form
+//           .getValuesIn(parentField.path)
+//           .map((item: Record<string, any>) => item[getFieldKey(path)]);
+//       }
+//       return form.getValuesIn(path.substr(1, path.length - 2));
+//     });
 
-    if (result.success) {
-      field.form.setValuesIn(field.path, result.result);
-    }
-  };
-}
+//     if (result.success) {
+//       field.form.setValuesIn(field.path, result.result);
+//     }
+//   };
+// }
 
 function getParentPath(path: string) {
   const pathArr = path.split('.');
