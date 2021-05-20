@@ -52,10 +52,6 @@ const functions = [
         name: 'IF',
         description: '根据判断条件，返回正确或错误的值',
       },
-      // {
-      //   name: 'IFS',
-      //   description: '检查是否满足一个或多个条件，且返回符合第一个 TRUE 条件的值',
-      // },
       {
         name: 'AND',
         description:
@@ -73,6 +69,47 @@ const functions = [
       {
         name: 'NOT',
         description: '对参数逻辑值求反',
+      },
+    ],
+  },
+  {
+    name: '文字',
+    functions: [
+      {
+        name: 'CONCATENATE',
+        description: '将多个文字合并',
+      },
+      {
+        name: 'LEFT',
+        description: '从左边截取指定长度的文字',
+      },
+      {
+        name: 'RIGHT',
+        description: '从右边边截取指定长度的文字',
+      },
+      {
+        name: 'MID',
+        description: '截取指定位置的文字',
+      },
+      {
+        name: 'REPLACE',
+        description: '替换文本中的指定文字',
+      },
+      {
+        name: 'TRIM',
+        description: '移除文字头尾的空格',
+      },
+      {
+        name: 'LEN',
+        description: '后去文字的长度',
+      },
+      {
+        name: 'LOWER',
+        description: '转成小写文字',
+      },
+      {
+        name: 'UPPER',
+        description: '转成大写文字',
       },
     ],
   },
