@@ -1,6 +1,6 @@
 {
   "name": "@toy-box/form-formula",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
@@ -42,6 +42,7 @@
     "react-dom": "^16.12.0"
   },
   "peerDependencies": {
+    "@formily/antd": "^2.0.0-beta.50",
     "@formily/core": "^2.0.0-beta.50",
     "@formily/json-schema": "^2.0.0-beta.50",
     "@formily/react": "^2.0.0-beta.50",
