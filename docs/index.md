@@ -19,3 +19,9 @@ footer: Open-source MIT Licensed | Copyright © 2020<br />Powered by [dumi](http
 ---
 
 ## Hello form-formula!
+
+Install dependencies,
+
+```bash
+$ npm i @toy-box/form-formula
+```
