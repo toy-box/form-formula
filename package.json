@@ -1,6 +1,10 @@
 {
   "name": "@toy-box/form-formula",
-  "version": "1.0.19",
+  "version": "1.0.20",
+  "author": "DivXPro",
+  "license": "MIT",
+  "homepage": "https://toy-box.github.io/form-formula",
+  "repository": "https://github.com/toy-box/form-formula",
   "scripts": {
     "start": "dumi dev",
     "docs:build": "dumi build",
