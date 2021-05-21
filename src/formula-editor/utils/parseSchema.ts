@@ -1,5 +1,17 @@
-import { ISchema, SchemaProperties } from '@formily/json-schema';
+import { ISchema, SchemaItems, SchemaProperties } from '@formily/json-schema';
+import { isArr } from '@formily/shared';
 import { Variable } from '../types';
+
+declare type SchemaProps = SchemaProperties<
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any,
+  any
+>;
 
 export function parseSchema(
   schema: ISchema,
@@ -9,16 +21,7 @@ export function parseSchema(
   const children: Variable[] = [];
   if (schema.type === 'object') {
     if (schema?.properties != null) {
-      const properties = schema.properties as SchemaProperties<
-        any,
-        any,
-        any,
-        any,
-        any,
-        any,
-        any,
-        any
-      >;
+      const properties = schema.properties as SchemaProps;
       Object.keys(properties).forEach((key) => {
         const fieldSchema = properties[key];
         const fieldPath = `${path ? `${path}.` : ''}${key}`;
@@ -26,8 +29,8 @@ export function parseSchema(
       });
     }
   } else if (schema.type === 'array') {
-    const items = schema.items as ISchema;
-    const itemProperties = items?.properties as
+    // const items = schema.items as ISchema;
+    const itemProperties = schema?.properties as
       | SchemaProperties<any, any, any, any, any, any, any, any>
       | undefined;
     if (itemProperties) {
@@ -61,29 +64,84 @@ export function parseSchema(
   };
 }
 
-export function cleanVoid(schema: ISchema): ISchema | undefined {
+function mapProperties(results: CleanSchemaResult[]) {
+  const properties: Record<string, ISchema> = {};
+  results.forEach((r) => {
+    if (r.key && r.schema) {
+      properties[r.key] = r.schema;
+    }
+  });
+  return properties;
+}
+
+export interface CleanSchemaResult {
+  key?: string;
+  schema?: ISchema;
+}
+
+export function cleanVoid(
+  schema: ISchema,
+  key?: string,
+): CleanSchemaResult | CleanSchemaResult[] | undefined {
   if (schema.type === 'object') {
     const { properties } = schema;
     if (typeof properties === 'object') {
-      const cleanProperties: Record<string, ISchema> = {};
+      const cleanProperties: CleanSchemaResult[] = [];
       Object.keys(properties).forEach((key) => {
-        const subSchema = cleanVoid(properties[key]);
-        subSchema && (cleanProperties[key] = subSchema);
+        const result = cleanVoid(properties[key], key);
+        if (isArr(result)) {
+          cleanProperties.push(...result);
+        } else if (result) {
+          cleanProperties.push(result);
+        }
       });
-      return { ...schema, properties: cleanProperties } as ISchema;
+      return {
+        schema: { ...schema, properties: mapProperties(cleanProperties) },
+        key,
+      };
     }
-    return schema as ISchema;
+    return { schema, key };
   }
   if (schema.type === 'array') {
+    const itemsSchema = schema?.items as ISchema | undefined;
+    const itemsProperties = itemsSchema?.properties as SchemaProps | undefined;
+    const cleanProperties: CleanSchemaResult[] = [];
+    if (itemsProperties) {
+      Object.keys(itemsProperties).forEach((key) => {
+        const result = cleanVoid(itemsProperties[key] as ISchema, key);
+        if (isArr(result)) {
+          cleanProperties.push(...result);
+        } else if (result) {
+          cleanProperties.push(result);
+        }
+      });
+    }
+    const properties = itemsProperties
+      ? mapProperties(cleanProperties)
+      : undefined;
+    const { items, ...other } = schema;
     return {
-      ...schema,
-      items: cleanVoid(schema.items as ISchema) as ISchema,
-    } as ISchema;
+      schema: {
+        ...other,
+        properties,
+      },
+      key,
+    };
   }
   if (schema.type === 'void') {
-    return schema.properties
-      ? (cleanVoid(schema.properties as ISchema) as ISchema)
-      : undefined;
+    const properties = schema.properties as SchemaProps | undefined;
+    const cleanProperties: CleanSchemaResult[] = [];
+    if (properties) {
+      Object.keys(properties).forEach((key) => {
+        const result = cleanVoid(properties[key] as ISchema, key);
+        if (isArr(result)) {
+          cleanProperties.push(...result);
+        } else if (result) {
+          cleanProperties.push(result);
+        }
+      });
+    }
+    return cleanProperties;
   }
-  return schema as ISchema;
+  return { schema, key };
 }

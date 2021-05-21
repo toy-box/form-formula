@@ -1,6 +1,7 @@
 import React, { FC, useState, useCallback, useMemo } from 'react';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { Editor as CodemirrorEditor } from 'codemirror';
+import { isArr } from '@formily/shared';
 import { ISchema } from '@formily/json-schema';
 import classNames from 'classnames';
 import { Toolbar } from './components';
@@ -42,9 +43,15 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
   const prefixCls = 'formula-editor';
   const innerVariables = useMemo(() => {
     if (schema) {
-      const cleanSchema = cleanVoid(schema);
-      if (cleanSchema) {
-        return parseSchema(cleanSchema, '', path).children;
+      const result = cleanVoid(schema);
+      if (result) {
+        return isArr(result)
+          ? (result
+              .map((r) => (r.schema ? parseSchema(r.schema, '', path) : null))
+              .filter((v) => v != null) as Variable[])
+          : result.schema
+          ? parseSchema(result.schema, '', path).children
+          : [];
       }
       return [];
     }
@@ -121,7 +128,8 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
   ) => {
     const doc = editor.getDoc();
     const el = document.createElement('span');
-    el.innerText = val.label;
+    // TODO: 增加父节点名称
+    el.innerText = val.label || val.value;
     el.className = 'formula-tag';
     doc.markText(begin, end, {
       replacedWith: el,
