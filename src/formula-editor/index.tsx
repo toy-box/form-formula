@@ -73,7 +73,7 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
     editor: any,
     content: any,
     line: any,
-    innerVariables: Variable[],
+    innerVariables: Variable[] = [],
   ) => {
     (innerVariables || []).forEach((variable) => {
       const variableMark = `{!${variable.value}}`;
