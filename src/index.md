@@ -4,6 +4,12 @@ nav:
   path: /components
 ---
 
+Install dependencies,
+
+```bash
+$ npm i @toy-box/form-formula
+```
+
 ## 公式编辑器
 
 ```tsx
