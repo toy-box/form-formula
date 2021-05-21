@@ -2,8 +2,8 @@ export interface Variable {
   label: string;
   value: string;
   type: string;
+  children?: Variable[];
 }
-
 
 export interface FunctionItem {
   name: string;

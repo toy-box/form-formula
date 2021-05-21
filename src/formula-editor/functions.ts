@@ -31,6 +31,10 @@ const functions = [
         description: '将数字四舍五入到指定的位数',
       },
       {
+        name: 'CONCATENATE',
+        description: '将多个文字合并',
+      },
+      {
         name: 'IF',
         description: '根据判断条件，返回正确或错误的值',
       },
