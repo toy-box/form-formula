@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import React, { FC, useCallback, useMemo } from 'react';
 import '../styles/fieldVariable.less';
-import { Variable } from '../types';
 
 export interface IFieldVariableProps {
   label: string;

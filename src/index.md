@@ -15,6 +15,7 @@ $ npm i @toy-box/form-formula
 ```tsx
 import React from 'react';
 import 'antd/dist/antd.css';
+import 'codemirror/lib/codemirror.css';
 import { FormulaEditor } from '@toy-box/form-formula';
 
 const style = {
@@ -250,6 +251,7 @@ import {
   Schema,
   ISchema,
 } from '@formily/react';
+import 'codemirror/lib/codemirror.css';
 
 const SchemaField = createSchemaField({
   components: {

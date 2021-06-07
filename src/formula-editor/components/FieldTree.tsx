@@ -1,8 +1,8 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Tree } from 'antd';
+import { DataNode } from 'rc-tree/lib/interface';
 import { Variable } from '../types';
 import FieldVariable from './FieldVariable';
-import { DataNode } from 'rc-tree/lib/interface';
 
 export interface FieldTreeProps {
   dataSource: Variable[];
