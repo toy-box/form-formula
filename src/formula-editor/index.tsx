@@ -8,9 +8,9 @@ import { Toolbar } from './components';
 import { FunctionGroup, Variable } from './types';
 import { default as funs } from './functions';
 import { parseSchema, cleanVoid } from './utils/parseSchema';
+import './styles';
 
 import 'codemirror/mode/spreadsheet/spreadsheet.js';
-import './styles';
 
 export interface FormulaEditorProps {
   title?: string;
@@ -67,6 +67,7 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
     if (value != null || value !== '') {
       initDocTag(editor, value);
     }
+    onChange && onChange(value);
   };
 
   const initDocTag = (editor: any, code: string) => {

@@ -13,7 +13,7 @@ $ npm i @toy-box/form-formula
 ## 公式编辑器
 
 ```tsx
-import React from 'react';
+import React, { useState } from 'react';
 import 'antd/dist/antd.css';
 import 'codemirror/lib/codemirror.css';
 import { FormulaEditor } from '@toy-box/form-formula';
@@ -224,9 +224,21 @@ const schema = {
   },
 };
 
-export default () => (
-  <FormulaEditor title="表单公式型字段" style={style} schema={schema} />
-);
+export default () => {
+  const [value, setValue] = useState();
+  return (
+    <>
+      {value}
+      <FormulaEditor
+        title="表单公式型字段"
+        style={style}
+        schema={schema}
+        value={value}
+        onChange={setValue}
+      />
+    </>
+  );
+};
 ```
 
 ## 公式执行
