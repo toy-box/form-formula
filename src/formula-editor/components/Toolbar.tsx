@@ -4,7 +4,6 @@ import FunctionStore from './FunctionStore';
 import FxIcon from './FxIcon';
 import VariableIcon from './VariableIcon';
 import { FunctionGroup, Variable } from '../types';
-import FieldVariable from './FieldVariable';
 import FieldTree from './FieldTree';
 
 const { TabPane } = Tabs;

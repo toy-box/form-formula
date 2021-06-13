@@ -25,7 +25,9 @@ export function parseSchema(
       Object.keys(properties).forEach((key) => {
         const fieldSchema = properties[key];
         const fieldPath = `${path ? `${path}.` : ''}${key}`;
-        children.push(parseSchema(fieldSchema, fieldPath, refPath));
+        if (refPath !== fieldPath) {
+          children.push(parseSchema(fieldSchema, fieldPath, refPath));
+        }
       });
     }
   } else if (schema.type === 'array') {
@@ -35,20 +37,28 @@ export function parseSchema(
       | undefined;
     if (itemProperties) {
       children.push(
-        ...Object.keys(itemProperties).map((key) => {
-          const fieldSchema = itemProperties[key];
-          const fieldPath = `${path ? `${path}.` : ''}${key}`;
-          return parseSchema(fieldSchema, fieldPath, refPath);
-        }),
+        ...Object.keys(itemProperties)
+          .filter((key) => {
+            return `${path ? `${path}.` : ''}${key}` != refPath;
+          })
+          .map((key) => {
+            const fieldSchema = itemProperties[key];
+            const fieldPath = `${path ? `${path}.` : ''}${key}`;
+            return parseSchema(fieldSchema, fieldPath, refPath);
+          }),
       );
     }
   } else {
-    children.push({
-      label: schema.title as string,
-      value: path,
-      type: schema.type || '',
-    });
+    console.log('path ?', path, refPath, path == refPath);
+    if (path != refPath) {
+      children.push({
+        label: schema.title as string,
+        value: path,
+        type: schema.type || '',
+      });
+    }
   }
+  console.log('children', children);
   if (schema.type === 'object' || schema.type === 'array') {
     return {
       label: schema.title as string,

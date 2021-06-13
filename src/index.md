@@ -235,6 +235,7 @@ export default () => {
         schema={schema}
         value={value}
         onChange={setValue}
+        path={'projects.total'}
       />
     </>
   );

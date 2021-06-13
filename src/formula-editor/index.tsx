@@ -56,6 +56,7 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
       return [];
     }
   }, []);
+
   const onReady = (editor: CodemirrorEditor, value: string) => {
     setEditor(editor);
     if (value != null && value !== '') {
