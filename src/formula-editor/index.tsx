@@ -5,9 +5,16 @@ import { isArr } from '@formily/shared';
 import { ISchema } from '@formily/json-schema';
 import classNames from 'classnames';
 import { Toolbar } from './components';
-import { FunctionGroup, Variable } from './types';
+import { FunctionGroup, IFieldMeta, Variable } from './types';
 import { default as funs } from './functions';
-import { parseSchema, cleanVoid } from './utils/parseSchema';
+import {
+  parseSchema,
+  cleanVoidSchema,
+  cleanVoidMetaSchema,
+  parseMetaSchema,
+  CleanSchemaResult,
+  CleanMetaSchemaResult,
+} from './utils';
 import './styles';
 
 import 'codemirror/mode/spreadsheet/spreadsheet.js';
@@ -20,7 +27,8 @@ export interface FormulaEditorProps {
   onChange?: (value: string) => void;
   className?: string;
   style?: React.CSSProperties;
-  schema?: ISchema;
+  schema?: ISchema | IFieldMeta;
+  metaSchema?: boolean;
 }
 
 const cmOptions = {
@@ -38,19 +46,33 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
   style,
   className,
   schema,
+  metaSchema,
 }) => {
   const [editor, setEditor] = useState<CodemirrorEditor>();
   const prefixCls = 'formula-editor';
+  const parse = useCallback(
+    (schema: IFieldMeta | ISchema, path: string, refPath?: string) => {
+      return metaSchema
+        ? parseSchema(schema)
+        : parseMetaSchema(schema as IFieldMeta);
+    },
+    [],
+  );
+
   const innerVariables = useMemo(() => {
     if (schema) {
-      const result = cleanVoid(schema);
+      const result = metaSchema
+        ? cleanVoidMetaSchema(schema as IFieldMeta)
+        : cleanVoidSchema(schema as ISchema);
       if (result) {
         return isArr(result)
           ? (result
-              .map((r) => (r.schema ? parseSchema(r.schema, '', path) : null))
+              .map((r: CleanSchemaResult | CleanMetaSchemaResult) =>
+                r.schema ? parse(r.schema, '', path) : null,
+              )
               .filter((v) => v != null) as Variable[])
           : result.schema
-          ? parseSchema(result.schema, '', path).children
+          ? parse(result.schema, '', path).children
           : [];
       }
       return [];

@@ -1,6 +1,6 @@
 {
   "name": "@toy-box/form-formula",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "author": "DivXPro",
   "license": "MIT",
   "homepage": "https://toy-box.github.io/form-formula",
@@ -37,7 +37,7 @@
     "@formily/json-schema": "^2.0.0-beta.50",
     "@formily/react": "^2.0.0-beta.50",
     "@formulajs/formulajs": "^2.6.9",
-    "@toy-box/formula": "^1.0.4",
+    "@toy-box/formula": "^1.0.5",
     "antd": "^4.15.5",
     "classnames": "^2.3.1",
     "codemirror": "^5.61.0",

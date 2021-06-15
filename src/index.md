@@ -17,6 +17,7 @@ import React, { useState } from 'react';
 import 'antd/dist/antd.css';
 import 'codemirror/lib/codemirror.css';
 import { FormulaEditor } from '@toy-box/form-formula';
+import { formulaTreeTest } from '@toy-box/formula';
 
 const style = {
   border: '1px solid gray',
@@ -229,6 +230,7 @@ export default () => {
   return (
     <>
       {value}
+      {formulaTreeTest(value) ? '有效' : '无效'}
       <FormulaEditor
         title="表单公式型字段"
         style={style}

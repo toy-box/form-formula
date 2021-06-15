@@ -1,57 +1,42 @@
-import { ISchema, SchemaProperties } from '@formily/json-schema';
+import { IFieldMeta, Variable } from '../types';
 import { isArr } from '@formily/shared';
-import { Variable } from '../types';
 
-declare type SchemaProps = SchemaProperties<
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any,
-  any
->;
-
-export function parseSchema(
-  schema: ISchema,
+export function parseMetaSchema(
+  schema: IFieldMeta,
   path: string = '',
   refPath?: string,
 ): Variable {
   const children: Variable[] = [];
   if (schema.type === 'object') {
     if (schema?.properties != null) {
-      const properties = schema.properties as SchemaProps;
+      const properties = schema.properties;
       Object.keys(properties).forEach((key) => {
         const fieldSchema = properties[key];
         const fieldPath = `${path ? `${path}.` : ''}${key}`;
         if (refPath !== fieldPath) {
-          children.push(parseSchema(fieldSchema, fieldPath, refPath));
+          children.push(parseMetaSchema(fieldSchema, fieldPath, refPath));
         }
       });
     }
   } else if (schema.type === 'array') {
-    // const items = schema.items as ISchema;
-    const itemProperties = schema?.properties as
-      | SchemaProperties<any, any, any, any, any, any, any, any>
-      | undefined;
-    if (itemProperties) {
+    const properties = schema.properties;
+    if (properties) {
       children.push(
-        ...Object.keys(itemProperties)
+        ...Object.keys(properties)
           .filter((key) => {
             return `${path ? `${path}.` : ''}${key}` != refPath;
           })
           .map((key) => {
-            const fieldSchema = itemProperties[key];
+            const fieldSchema = properties[key];
             const fieldPath = `${path ? `${path}.` : ''}${key}`;
-            return parseSchema(fieldSchema, fieldPath, refPath);
+            return parseMetaSchema(fieldSchema, fieldPath, refPath);
           }),
       );
     }
   } else {
     if (path != refPath) {
       children.push({
-        label: schema.title as string,
+        label: schema.name,
         value: path,
         type: schema.type || '',
       });
@@ -59,21 +44,26 @@ export function parseSchema(
   }
   if (schema.type === 'object' || schema.type === 'array') {
     return {
-      label: schema.title as string,
+      label: schema.name,
       value: path,
       type: schema.type?.toString(),
       children,
     };
   }
   return {
-    label: schema.title as string,
+    label: schema.name,
     value: path,
     type: schema.type || '',
   };
 }
 
-function mapProperties(results: CleanSchemaResult[]) {
-  const properties: Record<string, ISchema> = {};
+export interface CleanMetaSchemaResult {
+  key?: string;
+  schema?: IFieldMeta;
+}
+
+function mapProperties(results: CleanMetaSchemaResult[]) {
+  const properties: Record<string, IFieldMeta> = {};
   results.forEach((r) => {
     if (r.key && r.schema) {
       properties[r.key] = r.schema;
@@ -82,21 +72,16 @@ function mapProperties(results: CleanSchemaResult[]) {
   return properties;
 }
 
-export interface CleanSchemaResult {
-  key?: string;
-  schema?: ISchema;
-}
-
-export function cleanVoidSchema(
-  schema: ISchema,
+export function cleanVoidMetaSchema(
+  schema: IFieldMeta,
   key?: string,
-): CleanSchemaResult | CleanSchemaResult[] | undefined {
+): CleanMetaSchemaResult | CleanMetaSchemaResult[] | undefined {
+  const properties = schema.properties;
   if (schema.type === 'object') {
-    const { properties } = schema;
     if (typeof properties === 'object') {
-      const cleanProperties: CleanSchemaResult[] = [];
+      const cleanProperties: CleanMetaSchemaResult[] = [];
       Object.keys(properties).forEach((key) => {
-        const result = cleanVoidSchema(properties[key], key);
+        const result = cleanVoidMetaSchema(properties[key], key);
         if (isArr(result)) {
           cleanProperties.push(...result);
         } else if (result) {
@@ -111,12 +96,11 @@ export function cleanVoidSchema(
     return { schema, key };
   }
   if (schema.type === 'array') {
-    const itemsSchema = schema?.items as ISchema | undefined;
-    const itemsProperties = itemsSchema?.properties as SchemaProps | undefined;
-    const cleanProperties: CleanSchemaResult[] = [];
-    if (itemsProperties) {
-      Object.keys(itemsProperties).forEach((key) => {
-        const result = cleanVoidSchema(itemsProperties[key] as ISchema, key);
+    const { properties, ...other } = schema;
+    const cleanProperties: CleanMetaSchemaResult[] = [];
+    if (properties) {
+      Object.keys(properties).forEach((key) => {
+        const result = cleanVoidMetaSchema(properties[key] as IFieldMeta, key);
         if (isArr(result)) {
           cleanProperties.push(...result);
         } else if (result) {
@@ -124,24 +108,23 @@ export function cleanVoidSchema(
         }
       });
     }
-    const properties = itemsProperties
+    const newProerites = properties
       ? mapProperties(cleanProperties)
       : undefined;
-    const { items, ...other } = schema;
     return {
       schema: {
         ...other,
-        properties,
+        properties: newProerites,
       },
       key,
     };
   }
   if (schema.type === 'void') {
-    const properties = schema.properties as SchemaProps | undefined;
-    const cleanProperties: CleanSchemaResult[] = [];
+    const properties = schema.properties;
+    const cleanProperties: CleanMetaSchemaResult[] = [];
     if (properties) {
       Object.keys(properties).forEach((key) => {
-        const result = cleanVoidSchema(properties[key] as ISchema, key);
+        const result = cleanVoidMetaSchema(properties[key] as IFieldMeta, key);
         if (isArr(result)) {
           cleanProperties.push(...result);
         } else if (result) {
