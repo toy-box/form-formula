@@ -1,11 +1,11 @@
 import React, { FC, useState, useCallback, useMemo } from 'react';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { Editor as CodemirrorEditor } from 'codemirror';
-import { isArr } from '@formily/shared';
+import { isArr, isObj } from '@formily/shared';
 import { ISchema } from '@formily/json-schema';
 import classNames from 'classnames';
 import { Toolbar } from './components';
-import { FunctionGroup, Variable } from './types';
+import { FunctionGroup, Variable, MetaSchema } from './types';
 import { default as funs } from './functions';
 import { parseSchema, cleanVoid } from './utils/parseSchema';
 import './styles';
@@ -21,6 +21,7 @@ export interface FormulaEditorProps {
   className?: string;
   style?: React.CSSProperties;
   schema?: ISchema;
+  metaSchema?: MetaSchema;
 }
 
 const cmOptions = {
@@ -38,9 +39,11 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
   style,
   className,
   schema,
+  metaSchema,
 }) => {
   const [editor, setEditor] = useState<CodemirrorEditor>();
   const prefixCls = 'formula-editor';
+  const isSchema = !!schema;
   const innerVariables = useMemo(() => {
     if (schema) {
       const result = cleanVoid(schema);
@@ -52,6 +55,27 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
           : result.schema
           ? parseSchema(result.schema, '', path).children
           : [];
+      }
+      return [];
+    } else if (metaSchema) {
+      if (isArr(metaSchema)) {
+        const result = metaSchema.map((r) => {
+          return {
+            label: r.name,
+            value: r.key,
+            type: r.type,
+          };
+        });
+        return result as any[];
+      } else if (isObj(metaSchema)) {
+        const result = metaSchema?.list.map((r) => {
+          return {
+            label: r.name,
+            value: r.key,
+            type: r.type,
+          };
+        });
+        return result as any[];
       }
       return [];
     }

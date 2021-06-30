@@ -38,6 +38,7 @@
     "@formily/react": "^2.0.0-beta.50",
     "@formulajs/formulajs": "^2.6.9",
     "@toy-box/formula": "^1.0.4",
+    "@toy-box/meta-schema": "^1.0.28",
     "antd": "^4.15.5",
     "classnames": "^2.3.1",
     "codemirror": "^5.61.0",

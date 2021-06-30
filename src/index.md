@@ -10,7 +10,7 @@ Install dependencies,
 $ npm i @toy-box/form-formula
 ```
 
-## 公式编辑器
+## 公式编辑器-表单
 
 ```tsx
 import React, { useState } from 'react';
@@ -233,6 +233,111 @@ export default () => {
         title="表单公式型字段"
         style={style}
         schema={schema}
+        value={value}
+        onChange={setValue}
+        path={'projects.total'}
+      />
+    </>
+  );
+};
+```
+
+## 公式编辑器-meta
+
+```tsx
+import React, { useState } from 'react';
+import 'antd/dist/antd.css';
+import 'codemirror/lib/codemirror.css';
+import { FormulaEditor } from '@toy-box/form-formula';
+
+const style = {
+  border: '1px solid gray',
+};
+
+const metaSchema = [
+  {
+    description: null,
+    exclusiveMaximum: null,
+    exclusiveMinimum: null,
+    format: null,
+    key: 'deptId',
+    maxLength: null,
+    maximum: null,
+    minLength: null,
+    minimum: null,
+    name: '部门',
+    options: null,
+    parentKey: 'parent_id',
+    pattern: null,
+    primary: null,
+    properties: null,
+    refObjectId: '5f9630d977b9ec42e4d0dca5',
+    required: null,
+    titleKey: 'name',
+    type: 'objectId',
+    unique: null,
+    unBasic: true,
+  },
+  {
+    description: null,
+    exclusiveMaximum: null,
+    exclusiveMinimum: null,
+    format: null,
+    key: 'date',
+    maxLength: null,
+    maximum: null,
+    minLength: null,
+    minimum: null,
+    name: '日期',
+    options: null,
+    pattern: null,
+    primary: null,
+    properties: null,
+    required: null,
+    type: 'date',
+  },
+  {
+    description: null,
+    exclusiveMaximum: null,
+    exclusiveMinimum: null,
+    format: null,
+    key: 'copId',
+    maxLength: null,
+    maximum: null,
+    minLength: null,
+    minimum: null,
+    name: '公司',
+    options: [
+      {
+        label: '12323232',
+        value: '1',
+      },
+      {
+        label: 'bbbbbbb',
+        value: '2',
+      },
+    ],
+    pattern: null,
+    primary: null,
+    properties: null,
+    refObjectId: '5f9630d977b9ec42e4d0dca5',
+    required: null,
+    titleKey: 'name',
+    type: 'singleOption',
+    unique: null,
+    unBasic: true,
+  },
+];
+
+export default () => {
+  const [value, setValue] = useState();
+  return (
+    <>
+      {value}
+      <FormulaEditor
+        title="meta公式型字段"
+        style={style}
+        metaSchema={metaSchema}
         value={value}
         onChange={setValue}
         path={'projects.total'}
