@@ -17,6 +17,7 @@ export function parseSchema(
   schema: ISchema,
   path: string = '',
   refPath?: string,
+  parentFullName = '',
 ): Variable {
   const children: Variable[] = [];
   if (schema.type === 'object') {
@@ -25,17 +26,22 @@ export function parseSchema(
       Object.keys(properties).forEach((key) => {
         const fieldSchema = properties[key];
         const fieldPath = `${path ? `${path}.` : ''}${key}`;
+        const fullName = `${parentFullName ? parentFullName : ''}${
+          parentFullName ? '.' : ''
+        }${schema.title ? schema.title : ''}`;
         if (refPath !== fieldPath) {
-          children.push(parseSchema(fieldSchema, fieldPath, refPath));
+          children.push(parseSchema(fieldSchema, fieldPath, refPath, fullName));
         }
       });
     }
   } else if (schema.type === 'array') {
-    // const items = schema.items as ISchema;
     const itemProperties = schema?.properties as
       | SchemaProperties<any, any, any, any, any, any, any, any>
       | undefined;
     if (itemProperties) {
+      const fullName = `${parentFullName ? parentFullName : ''}${
+        parentFullName ? '.' : ''
+      }${schema.title ? schema.title : ''}`;
       children.push(
         ...Object.keys(itemProperties)
           .filter((key) => {
@@ -44,7 +50,7 @@ export function parseSchema(
           .map((key) => {
             const fieldSchema = itemProperties[key];
             const fieldPath = `${path ? `${path}.` : ''}${key}`;
-            return parseSchema(fieldSchema, fieldPath, refPath);
+            return parseSchema(fieldSchema, fieldPath, refPath, fullName);
           }),
       );
     }
@@ -54,6 +60,9 @@ export function parseSchema(
         label: schema.title as string,
         value: path,
         type: schema.type || '',
+        fullName: `${parentFullName ? parentFullName : ''}${
+          parentFullName ? '.' : ''
+        }${schema.title}`,
       });
     }
   }
@@ -63,12 +72,18 @@ export function parseSchema(
       value: path,
       type: schema.type?.toString(),
       children,
+      fullName: `${parentFullName ? parentFullName : ''}${
+        parentFullName ? '.' : ''
+      }${schema.title}`,
     };
   }
   return {
     label: schema.title as string,
     value: path,
     type: schema.type || '',
+    fullName: `${parentFullName ? parentFullName : ''}${
+      parentFullName ? '.' : ''
+    }${schema.title}`,
   };
 }
 

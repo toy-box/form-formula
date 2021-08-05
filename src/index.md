@@ -21,6 +21,7 @@ import { formulaTreeTest } from '@toy-box/formula';
 
 const style = {
   border: '1px solid gray',
+  wordBreak: 'break-word',
 };
 
 const schema = {

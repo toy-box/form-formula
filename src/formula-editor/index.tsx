@@ -53,8 +53,8 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
   const parse = useCallback(
     (schema: IFieldMeta | ISchema, path: string, refPath?: string) => {
       return metaSchema
-        ? parseSchema(schema)
-        : parseMetaSchema(schema as IFieldMeta);
+        ? parseMetaSchema(schema as IFieldMeta)
+        : parseSchema(schema);
     },
     [],
   );
@@ -153,7 +153,7 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
     const doc = editor.getDoc();
     const el = document.createElement('span');
     // TODO: 增加父节点名称
-    el.innerText = val.label || val.value;
+    el.innerText = val.fullName || val.label || val.value;
     el.className = 'formula-tag';
     doc.markText(begin, end, {
       replacedWith: el,
@@ -175,6 +175,7 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
             <span className="equle">=</span>
           </h1>
           <CodeMirror
+            autoCursor={false}
             value={value}
             options={cmOptions}
             editorDidMount={onReady}

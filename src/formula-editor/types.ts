@@ -2,6 +2,7 @@ export interface Variable {
   label: string;
   value: string;
   type: string;
+  fullName?: string;
   children?: Variable[];
 }
 

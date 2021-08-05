@@ -67,12 +67,12 @@ const functions = [
           '任何一个参数逻辑值为true，即返回true；只有当所有逻辑参数值为false，才返回false',
       },
       {
-        name: 'XOR',
-        description: '返回所有参数的异或值',
-      },
-      {
         name: 'NOT',
         description: '对参数逻辑值求反',
+      },
+      {
+        name: 'SWITCH',
+        description: '按多组条件匹配返回值',
       },
     ],
   },
@@ -115,14 +115,64 @@ const functions = [
         name: 'UPPER',
         description: '转成大写文字',
       },
+      {
+        name: 'EXACT',
+        description: '文字进行精确匹配',
+      },
+      {
+        name: 'FIND',
+        description: '查找匹配文字的位置',
+      },
+      {
+        name: 'NUMBERVALUE',
+        description: '返回数字的文本',
+      },
+      {
+        name: 'PROPER',
+        description: '修正英文字母的大小写',
+      },
+      {
+        name: 'REPT',
+        description: '将文本按指定次数重复显示',
+      },
+      {
+        name: 'SEARCH',
+        description:
+          '第二个文本字符串中查找第一个文本字符串，并返回第一个文本字符串的起始位置的编号',
+      },
+      {
+        name: 'SPLIT',
+        description: '返回一个从零开始、一维 数组 指定数量的子字符串',
+      },
+      {
+        name: 'SUBSTITUTE',
+        description: '在文本字符串中替换指定的文本',
+      },
+      {
+        name: 'TRIM',
+        description: '在文本中移除前导空格和尾随空格',
+      },
     ],
   },
   {
     name: '数字',
     functions: [
       {
+        name: 'ABS',
+        description: '返回数字的绝对值',
+      },
+      {
         name: 'AVERAGE',
         description: '计算所有参与运算字段的平均值',
+      },
+      {
+        name: 'CEILING',
+        description:
+          '将数字向上舍入（沿绝对值增大的方向）为最接近的指定基数的倍数',
+      },
+      {
+        name: 'CEILINGMATH',
+        description: '将数字向上舍入为最接近的整数或最接近的指定基数的倍数',
       },
       {
         name: 'COUNT',
@@ -133,9 +183,16 @@ const functions = [
         description: '返回所有参与运算字段中值不为空的数量',
       },
       {
-        name: 'COUNTIF',
-        description:
-          'COUNTIF(表格[金额], 100)，可得到表格中金额为100的数据条数',
+        name: 'EXP',
+        description: '返回 e 的 n 次幂',
+      },
+      {
+        name: 'FLOOR',
+        description: '返回数字向下舍入为最接近指定基数的倍数',
+      },
+      {
+        name: 'FLOORMATH',
+        description: '将数字向下舍入为最接近的整数或最接近的指定基数的倍数',
       },
       {
         name: 'MAX',
@@ -144,10 +201,6 @@ const functions = [
       {
         name: 'MIN',
         description: '返回所有参与字段中的最小值',
-      },
-      {
-        name: 'ROUND',
-        description: '将数字四舍五入到指定的位数',
       },
       {
         name: 'INT',
@@ -174,6 +227,10 @@ const functions = [
         description: '统计表格中符合条件的数值，并求和',
       },
       {
+        name: 'ROUND',
+        description: '将数字四舍五入到指定的位数',
+      },
+      {
         name: 'ROUNDUP',
         description: '将数字保留指定的位数，最后一位向上取',
       },
@@ -190,6 +247,14 @@ const functions = [
         description: '计算指定数字的自然对数',
       },
       {
+        name: 'LOG',
+        description: '根据指定底数返回数字的对数',
+      },
+      {
+        name: 'LOG10',
+        description: '返回数字以 10 为底的对数',
+      },
+      {
         name: 'SQRT',
         description: '计算指定数字的平方根',
       },
@@ -199,16 +264,37 @@ const functions = [
     name: '时间',
     functions: [
       {
+        name: 'DATE',
+        description:
+          '将数字拼接成为年份，数字字段顺序为：年／月／日／时／分／秒',
+      },
+      {
+        name: 'DAY',
+        description: '返回日期在一个月中的第几天的数值',
+      },
+      {
+        name: 'DAYS',
+        description: '返回日期字段1与日期字段2的差值，单位为天',
+      },
+      {
+        name: 'DAYS360',
+        description: '按照一年 360 天的算法，返回两个日期间相差的天数',
+      },
+      {
+        name: 'EDATE',
+        description: '返回指定日期相隔指定月份的日期',
+      },
+      {
+        name: 'EOMONTH',
+        description: '返回指定日期相隔指定月份的最后一天',
+      },
+      {
         name: 'YEAR',
         description: '返回日期中的年份',
       },
       {
         name: 'MONTH',
         description: '返回日期中的月份',
-      },
-      {
-        name: 'DAY',
-        description: '返回日期在一个月中的第几天的数值',
       },
       {
         name: 'HOUR',
@@ -223,12 +309,7 @@ const functions = [
         description: '返回日期中的秒，日期字段必须精确到时间才可以计算出来',
       },
       {
-        name: 'DATE',
-        description:
-          '将数字拼接成为年份，数字字段顺序为：年／月／日／时／分／秒',
-      },
-      {
-        name: 'CURDATE',
+        name: 'TODAY',
         description: '返回当前日期',
       },
       {
@@ -236,12 +317,12 @@ const functions = [
         description: '返回当前时间，精确到时/分/秒',
       },
       {
-        name: 'DAYS',
-        description: '返回日期字段1与日期字段2的差值，单位为天',
+        name: 'WEEKDAY',
+        description: '返回对应于某个日期的一周中的第几天',
       },
       {
-        name: 'DATEDELTA',
-        description: '将指定日期加/减指定天数，并返回目标日期',
+        name: 'WEEKNUM',
+        description: '返回指定日期在该年的周数',
       },
     ],
   },
