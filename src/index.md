@@ -230,8 +230,6 @@ export default () => {
   const [value, setValue] = useState();
   return (
     <>
-      {value}
-      {formulaTreeTest(value) ? '有效' : '无效'}
       <FormulaEditor
         title="表单公式型字段"
         style={style}

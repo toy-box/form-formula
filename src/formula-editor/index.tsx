@@ -51,13 +51,13 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
 }) => {
   const [editor, setEditor] = useState<CodemirrorEditor>();
   const prefixCls = 'formula-editor';
-  const parse = useCallback(
+  const parseSchemaVariables = useCallback(
     (schema: ISchema, path: string, refPath?: string) => {
       return metaSchema
         ? parseMetaSchema(schema as IFieldMeta)
         : parseSchema(schema);
     },
-    [],
+    [metaSchema],
   );
 
   const innerVariables = useMemo(() => {
@@ -69,11 +69,11 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
         return isArr(result)
           ? (result
               .map((r: CleanSchemaResult | CleanMetaSchemaResult) =>
-                r.schema ? parse(r.schema, '', path) : null,
+                r.schema ? parseSchemaVariables(r.schema, '', path) : null,
               )
               .filter((v) => v != null) as Variable[])
           : result.schema
-          ? parse(result.schema, '', path).children
+          ? parseSchemaVariables(result.schema, '', path).children
           : [];
       }
       return [];
@@ -153,7 +153,6 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
   ) => {
     const doc = editor.getDoc();
     const el = document.createElement('span');
-    // TODO: 增加父节点名称
     el.innerText = val.fullName || val.label || val.value;
     el.className = 'formula-tag';
     doc.markText(begin, end, {
