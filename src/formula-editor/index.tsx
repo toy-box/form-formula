@@ -3,9 +3,10 @@ import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { Editor as CodemirrorEditor } from 'codemirror';
 import { isArr } from '@formily/shared';
 import { ISchema } from '@formily/json-schema';
+import { IFieldMeta } from '@toy-box/meta-schema';
 import classNames from 'classnames';
 import { Toolbar } from './components';
-import { FunctionGroup, IFieldMeta, Variable } from './types';
+import { FunctionGroup, Variable } from './types';
 import { default as funs } from './functions';
 import {
   parseSchema,
@@ -51,7 +52,7 @@ const FormulaEditor: FC<FormulaEditorProps> = ({
   const [editor, setEditor] = useState<CodemirrorEditor>();
   const prefixCls = 'formula-editor';
   const parse = useCallback(
-    (schema: IFieldMeta | ISchema, path: string, refPath?: string) => {
+    (schema: ISchema, path: string, refPath?: string) => {
       return metaSchema
         ? parseMetaSchema(schema as IFieldMeta)
         : parseSchema(schema);

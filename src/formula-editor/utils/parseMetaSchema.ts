@@ -1,5 +1,6 @@
-import { IFieldMeta, Variable } from '../types';
 import { isArr } from '@formily/shared';
+import { IFieldMeta } from '@toy-box/meta-schema';
+import { Variable } from '../types';
 
 export function parseMetaSchema(
   schema: IFieldMeta,
