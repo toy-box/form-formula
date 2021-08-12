@@ -14,8 +14,7 @@
     "release": "npm run build && npm publish --access public",
     "prettier": "prettier --write \"**/*.{js,jsx,tsx,ts,less,md,json}\"",
     "test": "umi-test",
-    "test:coverage": "umi-test --coverage",
-    "antlr4ts": "antlr4ts ./src/formula/FormulaLexer.g4 ./src/formula/FormulaParser.g4"
+    "test:coverage": "umi-test --coverage"
   },
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
