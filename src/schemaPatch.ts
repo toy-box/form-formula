@@ -7,7 +7,7 @@ import { SchemaProperties } from '@formily/react';
 
 export function schemaPatch(schema: ISchema) {
   const { ['x-reactions']: reactions, properties } = schema;
-  let newSchema = { ...schema };
+  let newSchema: ISchema = { ...schema };
   if (properties) {
     newSchema = Object.assign(schema, {
       properties:
